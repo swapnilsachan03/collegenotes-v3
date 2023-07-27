@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 import Footer from './components/layout/Footer';
 import Navbar from './components/layout/Navbar'
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     description: 'Discover the ultimate exam preparation resources at CollegeNotes! Unlock the power of comprehensive subject guides, course materials, and invaluable notes for academic success. Our blog brings you expert insights and tips to ace your academics. Elevate your study game today!',
     images: [
       {
-        url: 'https://www.collegenotes.co.in/images/og-image.png',
+        url: 'https://www.collegenotes.co.in/images/meta-image.jpg',
         alt: 'CollegeNotes',
         width: 1200,
         height: 630,
@@ -74,6 +75,17 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/zim0dvu.css"/>
+
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-M2VTB22JD3" />
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+  
+            gtag('config', 'G-M2VTB22JD3');
+          `}
+        </Script>
       </head>
 
       <body className={`${inter.className} transition ease-linear duration-200`}>

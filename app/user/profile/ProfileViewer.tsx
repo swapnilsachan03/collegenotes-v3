@@ -1,22 +1,22 @@
 'use client';
 
 import Link from 'next/link';
+import axios from 'axios';
 import React, { Fragment, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { toast } from 'react-hot-toast';
 
 import Avatar from '@/app/components/Avatar';
 import SolidButton from '@/app/components/buttons/SolidButton';
 import ProfileNotesCard from './ProfileNotesCard';
 import ProfileSubjectCard from './ProfileSubjectCard';
 import Input from '@/app/components/inputs/Input';
+import { Notes, Subject, User } from '@prisma/client';
 
 import { FaDonate, FaUserEdit, FaUserMinus } from 'react-icons/fa';
 import { RiDashboardFill } from 'react-icons/ri';
-import { Dialog, Transition } from '@headlessui/react';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
 import { RxCross2 } from 'react-icons/rx';
 import { FiArrowUpRight } from 'react-icons/fi';
-import { Notes, Subject, User } from '@prisma/client';
 
 interface ProfileViewerProps {
   user: User;
@@ -76,14 +76,14 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
         Profile
       </h1>
 
-      <div className='flex flex-row justify-center gap-10'>
+      <div className='flex flex-col sm:flex-row items-center sm:items-start justify-center gap-10'>
         <Avatar
           alt={user?.name!}
           src={user?.avatar ? user.avatar.url! : user?.image!}
           size={52}
         />
 
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col items-center sm:items-start gap-3'>
           <h2 className='text-4xl font-extralight'>
             {user?.name}
           </h2>

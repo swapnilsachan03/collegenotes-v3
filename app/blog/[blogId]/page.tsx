@@ -4,7 +4,6 @@ import { Metadata, ResolvingMetadata } from 'next';
 
 import styles from "../../styles/Subject.module.css";
 
-import { Blog } from '@prisma/client';
 import NotFound from '@/app/not-found';
 import getBlogById from '@/app/actions/getBlogById';
 import getBlogMeta from '@/app/actions/meta/getBlogMeta';
@@ -30,7 +29,7 @@ export async function generateMetadata (
     title: `${blog.title} - CollegeBlog`,
     description: blog.metaDescription,
     keywords: blog.metaKeywords,
-    authors: [{ name: blog.authorName, url: 'https://www.collegenotes.co.in/blog' }],
+    authors: [{ name: blog.authorName, url: `https://www.collegenotes.co.in/blog/${blog.blogId}` }],
     robots: 'index, follow',
 
     openGraph: {

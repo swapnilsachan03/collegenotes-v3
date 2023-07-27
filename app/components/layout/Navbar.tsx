@@ -33,6 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const logoutHandler = () => {
     signOut({ callbackUrl: "/" });
+    setNavbarDisplay("hidden");
     toast.success("Logged out successfully");
   }
 
@@ -183,6 +184,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 label='Logout'
                 color={adminRoute ? 'cyan' : 'teal'}
                 leftIcon={MdLogout}
+                onClick={logoutHandler}
               />
             </>
           ) : (

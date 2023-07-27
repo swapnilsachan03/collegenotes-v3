@@ -4,7 +4,7 @@ import ProfileViewer from './ProfileViewer';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 import { Notes, Subject, User } from '@prisma/client';
 import prisma from "@/app/libs/prismadb";
-import Error from '@/app/error';
+import Error from '@/app/global-error';
 
 export const metadata = {
   title: 'Member Profile - CollegeNotes',

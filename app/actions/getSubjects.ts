@@ -29,38 +29,15 @@ export default async function getSubjects(keywords: string, degree: string, year
     }
   });
 
-  subjects.map(async (subject) => {
-    subject.icon.url = await getObjectSignedUrl(subject.icon.name);
-
-    await prisma.subject.update({
-      where: {
-        id: subject.id
-      },
-
-      data: {
-        icon: {
-          name: subject.icon.name,
-          url: subject.icon.url
-        }
-      }
-    });
-  });
-
-  /* const stats = await prisma.stats.findMany({
-    take: 1
-  });
-
-  await prisma.stats.update({
-    where: {
-      id: stats[0].id
-    },
-
-    data: {
-      views: {
-        increment: 1
+  for(let i = 0; i < subjects.length; i++) {
+    subjects[i] = {
+      ...subjects[i],
+      icon: {
+        url: await getObjectSignedUrl(subjects[i].icon.name),
+        name: subjects[i].icon.name
       }
     }
-  }); */
+  }
 
   return subjects;
 }

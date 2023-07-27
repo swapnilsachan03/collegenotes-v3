@@ -41,7 +41,7 @@ export default function Home() {
       lg:px-16
       xl:px-32
       2xl:px-80
-      py-8
+      py-12
       md:py-16
     '>
       <div className='
@@ -94,8 +94,7 @@ export default function Home() {
         p-6 xl:p-7 md:mt-4
         rounded-3xl
         text-white
-        bg-emerald-800
-        dark:bg-emerald-500/40
+        bg-sky-700
         relative
       '>
         <h3 className="font-bold text-3xl w-full md:w-2/3">
@@ -151,10 +150,50 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <div className='
+        flex flex-col md:flex-row
+        gap-8 lg:gap-24
+        items-center
+        justify-between
+      '>
+        <Image
+          alt="Girl taking notes"
+          src='/images/best-use-illustration.png'
+          loading="lazy"
+          width={500}
+          height={500}
+          className="w-[400px] lg:w-[unset] lg:h-[325px] self-center object-scale-down"
+        />
+
+        <div className='flex flex-col justify-start gap-6'>
+          <h2 className='font-extrabold text-3xl sm:text-4xl'>
+            The best way to study
+          </h2>
+
+          <p className="width-auto text-[15px] sm:text-base">
+            Our users say studying from YouTube lectures for understanding combined with CollegeNotes' study materials can synergize your preparation and make it faster, better and more efficient, so that you can perform well in your semester exams in less time!
+
+            <br/><br/>
+
+            In fact, this was one of the motivations behind starting CollegeNotes!
+          </p>
+
+          <div className="flex flex-row gap-2">
+            <Link href="/about">
+              <OutlineButton
+                color="teal"
+                label="See Our Story"
+                rightIcon={HiArrowRight}
+              />
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div className='
-      flex flex-col md:flex-row
+      flex flex-col-reverse md:flex-row
       gap-8 lg:gap-24
       items-center
       justify-between
@@ -170,6 +209,18 @@ export default function Home() {
       bg-stone-700
       dark:bg-stone-700
     '>
+      <div className='flex flex-col justify-start gap-8'>
+        <h2 className='font-extrabold text-4xl'>
+          Features for the future.
+        </h2>
+
+        <ul className="list-disc list-inside flex flex-col gap-3">
+          <li>Users will be able to rate notes and they'll be sorted accordingly for better accessibility to the readers.</li>
+          <li>When traffic is enough, CollegeNotes will be monetised to incentivise the contributors according to their notes' views.</li>
+          <li>A community and more support for learners to streamline their studies and speed up their exam preparation.</li>
+        </ul>
+      </div>
+      
       <Image
         alt="Man moving time"
         src='/images/upcoming-features-illustration.png'
@@ -178,18 +229,6 @@ export default function Home() {
         height={500}
         className="w-[400px] md:w-[300px] lg:w-[500px] self-center object-scale-down"
       />
-
-      <div className='flex flex-col justify-start gap-8'>
-        <h1 className='font-extrabold text-4xl'>
-          Features for the future.
-        </h1>
-
-        <ul className="list-disc list-inside">
-          <li>Users will be able to rate notes and they'll be sorted accordingly for better accessibility to the readers.</li>
-          <li>When traffic is enough, CollegeNotes will be monetised to incentivise the contributors according to their notes' views.</li>
-          <li>A community and more support for learners to streamline their studies and speed up their exam preparation.</li>
-        </ul>
-      </div>
     </div>
 
     <ReviewCarousel reviews={reviews} />

@@ -3,7 +3,6 @@ import { Metadata, ResolvingMetadata } from 'next';
 import SubjectViewer from "./Subject";
 import NotFound from '@/app/not-found';
 
-import { Notes, Subject } from '@prisma/client';
 import getSubjectById from '@/app/actions/getSubjectById';
 import { getSubjectMeta } from '@/app/actions/meta/getSubjectMeta';
 
