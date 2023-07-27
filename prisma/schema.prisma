@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  hashedPassword String?
+  bio            String?
+  role           Role      @default(user)
+  createdAt      DateTime  @default(now())
+  avatar         File?
+  image          String?
+
+  accounts  Account[]
+  blogs     Blog[]
+  favorites String[]  @default([])
+  bookmarks String[]  @default([])
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Subject {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  subjectId          String   @unique
+  name               String
+  description        String
+  seoDescription     String
+  seoKeywords        String
+  beforeNotesContent String
+  afterNotesContent  String
+  degree             String
+  year               String
+  poster             File
+  icon               File
+  published          Boolean  @default(true)
+  views              Int      @default(0)
+  notes              String[]
+  availableNotes     Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now())
+}
+
+model Notes {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  notesId           String   @unique
+  title             String
+  description       String   @default("No description has been provided for these notes.")
+  subject           String
+  contributor       String   @default("Admin")
+  contributorSocial String   @default("/")
+  institution       String
+  document          File
+  views             Int      @default(0)
+  createdAt         DateTime @default(now())
+}
+
+model Blog {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  blogId          String   @unique
+  title           String
+  headline        String
+  summary         String
+  metaDescription String
+  metaKeywords    String
+  content         String
+  poster          File
+  published       Boolean  @default(false)
+  views           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+
+  authorId    String @db.ObjectId
+  authorName  String
+  authorImage File?
+
+  categoryName String
+  categoryId   String   @db.ObjectId
+  category     Category @relation(fields: [categoryId], references: [id])
+
+  author User @relation(fields: [authorId], references: [id])
+}
+
+model Category {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId  String   @unique
+  name        String
+  description String
+  blogs       Blog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Stats {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  users        Int
+  subjects     Int
+  notes        Int
+  subjectViews Int      @default(0)
+  blogs        Int
+  blogViews    Int      @default(0)
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+}
+
+enum Role {
+  user
+  editor
+  admin
+}
+
+type File {
+  name String
+  url  String
+}
