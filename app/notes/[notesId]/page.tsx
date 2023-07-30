@@ -36,7 +36,13 @@ export async function generateMetadata(
       description: `Read these top notch notes of ${notes.subject} contributed by ${notes.contributor} only on CollegeNotes, and ace your semester exams!`,
       url: `https://www.collegenotes.co.in/notes/${notes.notesId}`,
       type: 'article',
-      authors: notes.contributor
+      authors: notes.contributor,
+      images: [
+        {
+          url: "https://www.collegenotes.co.in/images/meta-image.jpg",
+          alt: notes.title
+        },
+      ],
     },
 
     twitter: {

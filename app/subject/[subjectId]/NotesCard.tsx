@@ -33,6 +33,7 @@ const NotesCard: React.FC<NotesCardProps> = ({
       '
     >
       <Image
+        unoptimized
         alt={`${notes.title} icon`}
         src={image}
         loading="lazy"

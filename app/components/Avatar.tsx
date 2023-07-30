@@ -34,6 +34,7 @@ const Avatar: React.FC<AvatarProps> = ({ size, alt, src }) => {
 
   return (
     <Image
+      unoptimized
       alt={alt}
       src={src != "" && src ? src : "/images/avatar.png"}
       height={250}

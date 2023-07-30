@@ -26,7 +26,7 @@ const ChangePassword = () => {
         <div className='flex flex-col gap-0.5'>
           <label className='text-xs font-semibold'>Old password</label>
           <Input
-            type="text"
+            type="password"
             placeholder="Enter old password"
             value={oldPassword}
             required={true}
@@ -57,4 +57,4 @@ const ChangePassword = () => {
   )
 }
 
-export default ChangePassword
+export default ChangePassword;

@@ -22,7 +22,7 @@ const SolidButton: React.FC<ButtonProps> = ({
   leftIcon: LeftIcon,
   onClick
 }) => {
-  var btnClass = '';
+  var btnClass = '', loadingClass = '';
 
   switch (color) {
     case 'teal':
@@ -89,10 +89,14 @@ const SolidButton: React.FC<ButtonProps> = ({
       break;
   }
 
+  if(loading) {
+    loadingClass = 'opacity-60 pointer-events-none'
+  }
+
   return (
     <button
       type={submit ? "submit" : "button"}
-      className={btnClass}
+      className={btnClass + loadingClass}
       onClick={onClick}
     >
       { LeftIcon && <LeftIcon /> }

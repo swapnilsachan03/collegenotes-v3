@@ -46,6 +46,7 @@ const SubjectCard: React.FC<SubjectCardProps> = ({
       '
     >
       <Image
+        unoptimized
         alt={`${subject.name} icon`}
         src={subject.icon.url}
         loading="lazy"

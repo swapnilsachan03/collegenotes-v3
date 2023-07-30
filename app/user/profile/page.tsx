@@ -36,7 +36,7 @@ const Profile = async () => {
   for(let i = 0; i < user.favorites.length; i++) {
     const subject = await prisma.subject.findUnique({
       where: {
-        id: user.favorites[0]
+        id: user.favorites[i]
       }
     });
   
@@ -49,7 +49,7 @@ const Profile = async () => {
         id: user.bookmarks[i]
       }
     });
-  
+
     bookmarks.push(notes!);
   }
 

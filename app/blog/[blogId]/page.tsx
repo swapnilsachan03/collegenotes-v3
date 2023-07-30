@@ -38,6 +38,12 @@ export async function generateMetadata (
       url: `https://www.collegenotes.co.in/blog/${blog.blogId}`,
       type: 'article',
       authors: blog.authorName,
+      images: [
+        {
+          url: blog.poster.url,
+          alt: blog.title,
+        }
+      ],
     },
 
     twitter: {
@@ -94,6 +100,7 @@ const Page = async ({ params }: { params: IParams }) => {
         </div>
 
         <Image
+          unoptimized
           src={blog.poster.url}
           alt={blog.title}
           width={800}

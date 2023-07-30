@@ -17,9 +17,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
 
   const submitHandler = (e: Event) => {
     e.preventDefault();
+    setLoading(true);
 
     signIn('credentials', {
       email,
@@ -29,12 +31,16 @@ const Login = () => {
     .then((res) => {
       if(res?.ok) {
         toast.success('Logged in successfully!');
+        setLoading(false);
         router.refresh();
         router.push("/");
       }
 
       if(res?.error) {
         toast.error(res.error);
+        setLoading(false);
+        setEmail("");
+        setPassword("");
       }
     })
   }
@@ -81,6 +87,7 @@ const Login = () => {
           <SolidButton
             color='teal'
             label='Login'
+            loading={loading}
             onClick={(e: any) => submitHandler(e)}
           />
 

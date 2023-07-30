@@ -16,6 +16,12 @@ export const metadata = {
     title: 'CollegeBlog - The blog from CollegeNotes',
     description: "Read the latest & most helpful blogs from the people at CollegeNotes. We write about college life, study tips, course guides, career advice & more. Gain exclusive insights on various topics helpful for your college journey.",
     url: 'https://www.collegenotes.co.in/blog',
+    images: [
+      {
+        url: 'https://www.collegenotes.co.in/images/blog-meta-image.jpg',
+        alt: 'CollegeBlog'
+      },
+    ],
   },
 
   twitter: {

@@ -33,7 +33,13 @@ export async function generateMetadata(
       title: `${subject.name} - Notes, PYQs and more on CollegeNotes`,
       description: subject.seoDescription,
       url: `https://www.collegenotes.co.in/subject/${subject.subjectId}`,
-      type: 'website'
+      type: 'website',
+      images: [
+        {
+          url: subject.poster.url,
+          alt: subject.name
+        },
+      ],
     },
 
     twitter: {

@@ -61,6 +61,7 @@ const SubjectViewer: React.FC<SubjectProps> = ({ subject, notes }) => {
         </div>
 
         <Image
+          unoptimized
           src={subject.poster.url}
           alt={subject.name}
           width={1500}

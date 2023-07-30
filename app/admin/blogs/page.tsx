@@ -5,18 +5,18 @@ import BlogsManager from './Blogs';
 import { Blog } from '@prisma/client';
 
 export const metadata = {
-  title: 'Blogs Manager - CollegeNotes',
+  title: 'Blogs Manager - CollegeBlog',
   description: 'View all blogs and related information on CollegeBlog. Edit or delete existing blogs.',
-  keywords: 'collegenotes, collegenotes add subject, add subject to collegenotes, add subject',
+  keywords: 'collegenotes, collegenotes new blog, new blog collegeblog, collegenotes new blog',
 
   openGraph: {
-    title: 'Blogs Manager - CollegeNotes',
+    title: 'Blogs Manager - CollegeBlog',
     description: "View all blogs and related information on CollegeBlog. Edit or delete existing blogs.",
     url: 'https://www.collegenotes.co.in/admin/blogs',
   },
 
   twitter: {
-    title: 'Blogs Manager - CollegeNotes',
+    title: 'Blogs Manager - CollegeBlog',
     description: "View all blogs and related information on CollegeBlog. Edit or delete existing blogs."
   },
 }
