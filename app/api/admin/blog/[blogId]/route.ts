@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
@@ -95,6 +96,7 @@ export async function PUT (
   const categoryId = formData.get("categoryId")?.toString();
   const categoryName = formData.get("categoryName")?.toString();
   const poster = formData.get("poster") as File;
+  const cover = formData.get("cover") as File;
 
   if(!title || !id || !headline || !summary || !metaDescription || !metaKeywords || !content || !categoryId || !categoryName) {
     return Error("Missing fields.");
@@ -120,6 +122,33 @@ export async function PUT (
     await uploadFile(posterBuffer, posterFileName, poster.type);
   }
 
+  let coverFileName = '';
+
+  if(cover.name != undefined) {
+    if(blog.cover) await deleteFile(blog.cover.name);
+
+    const fileBuffer = await cover.arrayBuffer();
+    coverFileName = generateFileName(cover.name);
+
+    await new Promise((resolve, reject) => {
+      sharp(fileBuffer)
+        .resize({
+          width: 800,
+          fit: sharp.fit.cover
+        })
+        .toBuffer(async (err, buffer, info) => {
+          if(buffer) {
+            await uploadFile(buffer, coverFileName, cover.type);
+            resolve(true);
+          }
+
+          else {
+            return Error("Error while uploading image.");
+          }
+        })
+    })
+  }
+
   try {
     await prisma.blog.update({
       where: {
@@ -139,7 +168,11 @@ export async function PUT (
         poster: {
           name: posterFileName,
           url: await getObjectSignedUrl(posterFileName)
-        }
+        },
+        cover: coverFileName != '' ? {
+          name: coverFileName,
+          url: await getObjectSignedUrl(coverFileName)
+        } : blog.cover
       }
     });
 

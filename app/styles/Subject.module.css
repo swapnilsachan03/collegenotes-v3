@@ -9,11 +9,6 @@
 
 .content p {
   text-align: justify;
-  padding-top: 8px;
-}
-
-.content br {
-  display: none;
 }
 
 .content a {
@@ -28,20 +23,23 @@
   font-family: 'source-serif-pro';
   font-size: 25px;
   text-decoration: underline;
-  padding-top: 20px;
+  padding-top: 15px;
   font-weight: 800;
 }
 
-.content ul {
-  padding-left: 10px;
-  padding-top: 10px;
-  list-style: disc;
+.content ol {
+  word-break: break-all;
+  list-style-type: decimal;
 }
 
-.content ol {
-  padding-left: 10px;
-  padding-top: 10px;
-  list-style-type: decimal;
+.content ol li::before {
+  content: "";
+  width: 10px;
+  display: inline-block;
+}
+
+.content ul {
+  list-style: disc;
 }
 
 .content li {

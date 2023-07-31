@@ -53,7 +53,8 @@ const CollegeBlog = async () => {
         <div className='w-full flex flex-col md:flex-row gap-7 items-center'>
           <div className='w-full md:w-[50%] h-80 sm:h-96 2xl:h-[410px]'>
             <Image
-              src={blogs[0].poster.url}
+              unoptimized
+              src={blogs[0].cover ? blogs[0].cover.url : blogs[0].poster.url}
               alt={blogs[0].title}
               width={500}
               height={500}

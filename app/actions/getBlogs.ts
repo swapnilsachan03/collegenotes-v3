@@ -27,6 +27,7 @@ export default async function getBlogs() {
       authorName: true,
       published: true,
       poster: true,
+      cover: true,
       createdAt: true,
       views: true
     }
@@ -38,7 +39,11 @@ export default async function getBlogs() {
       poster: {
         url: await getObjectSignedUrl(blogs[i].poster.name),
         name: blogs[i].poster.name
-      }
+      },
+      cover: blogs[i].cover ? {
+        url: await getObjectSignedUrl(blogs[i].cover!.name),
+        name: blogs[i].cover!.name
+      } : null
     }
   }
 

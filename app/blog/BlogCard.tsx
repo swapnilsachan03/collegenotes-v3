@@ -12,7 +12,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
       <div className='w-[200px] sm:w-[250px] md:w-1/2 lg:w-full'>
         <Image
           alt={blog.title}
-          src={blog.poster.url}
+          src={blog.cover ? blog.cover.url : blog.poster.url}
           width={500}
           height={500}
           className='w-full aspect-square object-cover'

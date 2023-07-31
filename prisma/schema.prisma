@@ -92,6 +92,7 @@ model Blog {
   metaKeywords    String
   content         String
   poster          File
+  cover           File?
   published       Boolean  @default(false)
   views           Int      @default(0)
   createdAt       DateTime @default(now())

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { RiDraftFill, RiImageAddFill } from 'react-icons/ri';
 import { MdPublish } from 'react-icons/md';
+import { FaPaintRoller } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
 import OutlinedInput from '@/app/components/inputs/OutlinedInput';
@@ -68,9 +69,14 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
   const [categoryName, setCategoryName] = useState(blog.categoryName);
   const [poster, setPoster] = useState<File>();
   const [posterPrev, setPosterPrev] = useState(blog.poster.url);
+  const [cover, setCover] = useState<File>();
+
+  const [loading, setLoading] = useState(false);
 
   const submitHandler = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
+
     const myForm = new FormData();
 
     myForm.append("title", title);
@@ -83,6 +89,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
     myForm.append("categoryId", categoryId);
     myForm.append("categoryName", categoryName);
     myForm.append("poster", poster!);
+    myForm.append("cover", cover!);
 
     const response = await axios.put(`/api/admin/blog/${id}`, myForm)
     .then(() => {
@@ -91,6 +98,9 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
     })
     .catch((error) => {
       toast.error("Some error occurred");
+    })
+    .finally(() => {
+      setLoading(false);
     });
   };
 
@@ -102,6 +112,16 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
     reader.onloadend = () => {
       setPosterPrev(reader.result ? reader.result.toString() : "");
       setPoster(file);
+    }
+  }
+
+  const changeCoverHandler = (event: any) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setCover(file);
     }
   }
 
@@ -135,6 +155,21 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
               onChange={(value: string) => setTitle(value)}
               required
             />
+
+            <input
+              id={"cover-btn"}
+              accept="image/png, image/jpg, image/jpeg"
+              type={"file"}
+              onChange={changeCoverHandler}
+              className='hidden'
+            />
+
+            <SolidButton
+              color='cyan'
+              leftIcon={FaPaintRoller}
+            >
+              <label htmlFor='cover-btn' className='cursor-pointer font-medium'> Cover </label>
+            </SolidButton>
 
             <input
               id={"poster-btn"}
@@ -193,6 +228,11 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
               required
             />
           </div>
+
+          <p className='font-semibold text-sm opacity-60'>
+            Cover Image: {" "}
+            <span className='font-light'> { cover ? cover.name : "Not selected" } </span>
+          </p>
 
           <div className='flex flex-row flex-wrap gap-6 mt-2'>
             <h4 className='text-sm font-semibold'>
@@ -260,6 +300,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ categories, blog }) => {
 
               <SolidButton
                 submit={true}
+                loading={loading}
                 color='cyan'
                 label='Publish'
                 leftIcon={MdPublish}
