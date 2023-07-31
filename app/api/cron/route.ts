@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 
-export async function POST (
+export async function GET (
   req: Request,
 ) {
   const stats = await prisma.stats.create({
