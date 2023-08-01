@@ -94,7 +94,8 @@ export async function POST(request: Request) {
       },
 
       data: {
-        subjects: await prisma.subject.count()
+        subjects: await prisma.subject.count(),
+        updatedAt: new Date(Date.now())
       }
     });
 

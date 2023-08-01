@@ -27,6 +27,10 @@ export default async function getBlogById (blogId: string) {
   });
 
   const stats = await prisma.stats.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
+
     take: 1
   });
 

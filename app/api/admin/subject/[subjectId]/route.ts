@@ -74,7 +74,9 @@ export async function DELETE (
     },
 
     data: {
-      subjects: await prisma.subject.count()
+      subjects: await prisma.subject.count(),
+      notes: await prisma.notes.count(),
+      updatedAt: new Date(Date.now())
     }
   });
 
@@ -293,7 +295,8 @@ export async function POST (
       },
 
       data: {
-        notes: await prisma.notes.count()
+        notes: await prisma.notes.count(),
+        updatedAt: new Date(Date.now())
       }
     });
 

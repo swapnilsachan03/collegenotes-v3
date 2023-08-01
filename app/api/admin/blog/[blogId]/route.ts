@@ -57,7 +57,8 @@ export async function DELETE (
     },
 
     data: {
-      subjects: await prisma.blog.count()
+      subjects: await prisma.blog.count(),
+      updatedAt: new Date(Date.now())
     }
   });
 

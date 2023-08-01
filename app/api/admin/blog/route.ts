@@ -101,7 +101,8 @@ export async function POST(request: Request) {
       },
 
       data: {
-        blogs: await prisma.blog.count()
+        blogs: await prisma.blog.count(),
+        updatedAt: new Date(Date.now())
       }
     });
 

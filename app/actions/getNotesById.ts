@@ -27,6 +27,10 @@ export default async function getNotesById (notesId: string) {
   });
 
   const stats = await prisma.stats.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
+
     take: 1
   });
 

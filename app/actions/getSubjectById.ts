@@ -41,6 +41,10 @@ export default async function getSubjectById (subjectId: string) {
   });
 
   const stats = await prisma.stats.findMany({
+    orderBy: {
+      createdAt: "desc"
+    },
+
     take: 1
   });
 

@@ -13,6 +13,9 @@ export async function GET (
       createdAt: new Date(Date.now()),
       updatedAt: new Date(Date.now())
     }
+  })
+  .catch((err) => {
+    return NextResponse.json({ message: "Stats creation failed" });
   });
 
   return NextResponse.json({ message: "Stats created successfully" });

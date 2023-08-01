@@ -11,7 +11,16 @@ interface DashboardProps {
   data: any;
 }
 
-const DataCard = ({ title, quantity, quantityPercent, profit }: any) => {
+interface DataCardProps {
+  title: string;
+  quantity: number;
+  quantityPercent: number;
+  profit: boolean;
+}
+
+const DataCard: React.FC<DataCardProps> = ({
+  title, quantity, quantityPercent, profit
+}) => {
   return (
     <div className='
       p-5 w-60
@@ -27,7 +36,7 @@ const DataCard = ({ title, quantity, quantityPercent, profit }: any) => {
       <div className='flex flex-row items-center gap-1.5'>
         <p className='text-xl font-semibold'> {quantity} </p>
         <div className='flex flex-row items-center'>
-          <p className='text-md'> {quantityPercent}% </p>
+          <p className='text-md'> {quantityPercent.toFixed(2)}% </p>
           { profit ?
             <RiArrowUpLine color='green' /> :
             <RiArrowDownLine color='red' />
@@ -62,8 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
           py-8
         '>
           <p className='text-center text-sm mb-6 opacity-50'>
-            Last change was on mangalvaar
-            {/* Last change was on {new Date(stats[11].createdAt).toDateString()}, {new Date(stats[11].createdAt).toLocaleTimeString()} */}
+            Last change was on {new Date(stats[11].createdAt).toDateString()}, {new Date(stats[11].updatedAt).toLocaleTimeString()}
           </p>
 
           <h1 className='text-4xl font-extrabold pb-8 text-center'>
