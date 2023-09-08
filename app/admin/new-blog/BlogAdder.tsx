@@ -1,60 +1,28 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { RiDraftFill, RiImageAddFill } from 'react-icons/ri';
 import { MdPublish } from 'react-icons/md';
 import { FaPaintRoller } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
+import { Editor as TinyMCE } from '@tinymce/tinymce-react';
 
 import OutlinedInput from '@/app/components/inputs/OutlinedInput';
 import SolidButton from '@/app/components/buttons/SolidButton';
 import OutlinedTextArea from '@/app/components/inputs/OutlinedTextArea';
 import OutlineButton from '@/app/components/buttons/OutlineButton';
 
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
-import type ReactQuill from 'react-quill';
 import { Category } from '@prisma/client';
-
-const QuillNoSSRWrapper = dynamic (
-  async () => {
-    const { default: RQ } = await import('react-quill');
-
-    // eslint-disable-next-line react/display-name
-    return ({ ...props }) => <RQ {...props} />;
-  }, { 
-    ssr: false,
-    loading: () => <p>Loading ...</p>
-  }
-) as typeof ReactQuill;
 
 interface BlogEditorProps {
   categories: Category[];
 }
 
 const NewBlog: React.FC<BlogEditorProps> = ({ categories }) => {
-  const modules = {
-    toolbar: [
-      [{ header: '1' }, { header: '2' }, { header: '3' }],
-      [{ size: [] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['link', 'image', 'video'],
-      ['clean'],
-    ],
-    clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
-      matchVisual: false,
-    },
-  }
-  
+  const editorRef = useRef<any>(null);
+
   const [title, setTitle] = useState("");
   const [blogId, setBlogId] = useState("");
   const [headline, setHeadline] = useState("");
@@ -76,13 +44,17 @@ const NewBlog: React.FC<BlogEditorProps> = ({ categories }) => {
 
     const myForm = new FormData();
 
+    if(editorRef.current) {
+      const content = editorRef.current.getContent();
+      myForm.append("content", content);
+    }
+
     myForm.append("title", title);
     myForm.append("blogId", blogId);
     myForm.append("headline", headline);
     myForm.append("summary", summary);
     myForm.append("metaDescription", metaDescription);
     myForm.append("metaKeywords", metaKeywords);
-    myForm.append("content", content);
     myForm.append("categoryId", categoryId);
     myForm.append("categoryName", categoryName);
     myForm.append("poster", poster!);
@@ -290,18 +262,29 @@ const NewBlog: React.FC<BlogEditorProps> = ({ categories }) => {
             flex flex-col
             items-center
             justify-between
-            h-[1000px] md:h-[960px]
+            h-[920px]
             w-full
             mt-10
           '>
             <div className='h-[850px] w-full'>
-              <QuillNoSSRWrapper
-                placeholder='Enter content of the blog here ...'
-                modules={modules}
-                value={content}
-                onChange={setContent}
-                theme='snow'
-                style={{width: "100%", height: "100%"}}
+              <TinyMCE
+                apiKey='hjqkalathtise14cv1v91jqibtaolkr9fz1kpsvgsn72s1m4'
+                onInit={(evt, editor) => editorRef.current = editor}
+                initialValue={"<p>Write blog content here...</p>"}
+                init={{
+                  height: 850,
+                  menubar: true,
+                  plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                  ],
+                  toolbar: 'undo redo | blocks | ' +
+                    'bold italic forecolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | fullscreen',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }}
               />
             </div>
 

@@ -44,13 +44,14 @@ const Subjects: React.FC<SubjectsProps> = ({ subjects }) => {
           items-center
           h-full
           mx-3 my-10
-          w-[1200px]
+          w-full overflow-auto
+          xl:w-[1200px]
         '>
           <h1 className='text-4xl font-extrabold pb-8 text-center'>
             Subjects Manager
           </h1>
 
-          <table className='w-full'>
+          <table className='w-[1100px]'>
             <caption className='caption-bottom mt-5 text-[15px] font-medium text-neutral-600 dark:text-neutral-300'>
               All saved subjects in the DB
             </caption>

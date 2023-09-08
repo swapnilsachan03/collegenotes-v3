@@ -135,6 +135,8 @@ model Stats {
 enum Role {
   user
   editor
+  adder
+  blogger
   admin
 }
 

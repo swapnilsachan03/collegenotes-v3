@@ -1,61 +1,32 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import { RiDraftFill, RiImageAddFill } from 'react-icons/ri';
 import { MdPublish } from 'react-icons/md';
+import { Editor as TinyMCE } from '@tinymce/tinymce-react';
 
 import OutlinedInput from '@/app/components/inputs/OutlinedInput';
 import SolidButton from '@/app/components/buttons/SolidButton';
 import OutlinedTextArea from '@/app/components/inputs/OutlinedTextArea';
 import OutlineButton from '@/app/components/buttons/OutlineButton';
 
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
-import type ReactQuill from 'react-quill';
 import { HiPlus } from 'react-icons/hi';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import { BsFilePdfFill } from 'react-icons/bs';
 import { Subject } from '@prisma/client';
 
-const QuillNoSSRWrapper = dynamic (
-  async () => {
-    const { default: RQ } = await import('react-quill');
-
-    // eslint-disable-next-line react/display-name
-    return ({ ...props }) => <RQ {...props} />;
-  }, { 
-    ssr: false,
-    loading: () => <p>Loading ...</p>
-  }
-) as typeof ReactQuill;
-
 interface EditorProps {
   subject: Subject;
 }
 
-const Editor: React.FC<EditorProps> = ({ subject }) => {
-  const modules = {
-    toolbar: [
-      [{ header: '1' }, { header: '2' }, { header: '3' }],
-      [{ size: [] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['link', 'image', 'video'],
-      ['clean'],
-    ],
-    clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
-      matchVisual: false,
-    },
-  }
+const SubjectEditor: React.FC<EditorProps> = ({ subject }) => {
+  const beforeNotesEditorRef = useRef<any>(null);
+  const afterNotesEditorRef = useRef<any>(null);
+
+  const [loading, setLoading] = useState(false);
 
   const [subjectId, setSubjectId] = useState(subject.subjectId);
   const [subjectName, setSubjectName] = useState(subject.name);
@@ -72,15 +43,25 @@ const Editor: React.FC<EditorProps> = ({ subject }) => {
 
   const submitHandler = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
+
     const myForm = new FormData();
+
+    if(beforeNotesEditorRef.current) {
+      const content = beforeNotesEditorRef.current.getContent();
+      myForm.append("beforeNotesContent", content);
+    }
+
+    if(afterNotesEditorRef.current) {
+      const content = afterNotesEditorRef.current.getContent();
+      myForm.append("afterNotesContent", content);
+    }
 
     myForm.append("subjectId", subjectId);
     myForm.append("name", subjectName);
     myForm.append("description", description);
     myForm.append("seoDescription", seoDescription);
     myForm.append("seoKeywords", seoKeywords);
-    myForm.append("beforeNotesContent", beforeNotes);
-    myForm.append("afterNotesContent", afterNotes);
     myForm.append("degree", degree);
     myForm.append("year", year);
     myForm.append("poster", poster!);
@@ -90,8 +71,12 @@ const Editor: React.FC<EditorProps> = ({ subject }) => {
     .then(() => {
       toast.success("Subject modified successfully");
       window.location.href = `/admin/subjects`;
-    }).catch((err) => {
+    })
+    .catch((err) => {
       toast.error("Some error occurred");
+    })
+    .finally(() => {
+      setLoading(false);
     });
   };
 
@@ -270,29 +255,51 @@ const Editor: React.FC<EditorProps> = ({ subject }) => {
             flex flex-col
             items-center
             justify-between
-            h-[1150px] md:h-[1100px]
+            h-[1300px] md:h-[1300px]
             w-full
             mt-10
           '>
-            <div className='h-[450px] w-full'>
-              <QuillNoSSRWrapper
-                placeholder='Enter content to show before notes'
-                modules={modules}
-                value={beforeNotes}
-                onChange={setBeforeNotes}
-                theme='snow'
-                style={{width: "100%", height: "100%"}}
+            <div className='h-[600px] w-full'>
+              <TinyMCE
+                apiKey='hjqkalathtise14cv1v91jqibtaolkr9fz1kpsvgsn72s1m4'
+                onInit={(evt, editor) => beforeNotesEditorRef.current = editor}
+                initialValue={beforeNotes}
+                init={{
+                  height: 600,
+                  menubar: true,
+                  plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                  ],
+                  toolbar: 'undo redo | blocks | ' +
+                    'bold italic forecolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | fullscreen',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }}
               />
             </div>
 
-            <div className='h-[450px] w-full'>
-              <QuillNoSSRWrapper
-                placeholder='Enter content to show after notes'
-                modules={modules}
-                value={afterNotes}
-                onChange={setAfterNotes}
-                theme='snow'
-                style={{width: "100%", height: "100%"}}
+            <div className='h-[600px] w-full'>
+              <TinyMCE
+                apiKey='hjqkalathtise14cv1v91jqibtaolkr9fz1kpsvgsn72s1m4'
+                onInit={(evt, editor) => afterNotesEditorRef.current = editor}
+                initialValue={afterNotes}
+                init={{
+                  height: 600,
+                  menubar: true,
+                  plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                  ],
+                  toolbar: 'undo redo | blocks | ' +
+                    'bold italic forecolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | fullscreen',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }}
               />
             </div>
 
@@ -305,6 +312,7 @@ const Editor: React.FC<EditorProps> = ({ subject }) => {
 
               <SolidButton
                 submit={true}
+                loading={loading}
                 color='cyan'
                 label='Publish'
                 leftIcon={MdPublish}
@@ -318,4 +326,4 @@ const Editor: React.FC<EditorProps> = ({ subject }) => {
   )
 }
 
-export default Editor;
+export default SubjectEditor;

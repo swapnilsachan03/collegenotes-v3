@@ -80,10 +80,11 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
 
           <div className='
             flex flex-col
-            lg:flex-row
+            sm:flex-row
             justify-center
+            items-center
             w-full
-            gap-8
+            gap-4 md:gap-8
           '>
             <DataCard title={"Views"} quantity={viewsCount} quantityPercent={viewsChange} profit={viewsProfit} />
             <DataCard title={"Members"} quantity={usersCount} quantityPercent={usersChange} profit={usersProfit} />
