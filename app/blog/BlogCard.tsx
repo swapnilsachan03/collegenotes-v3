@@ -11,6 +11,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
     <div className='flex flex-row lg:flex-col justify-start gap-3 lg:gap-2 w-full lg:w-[50%]'>
       <div className='w-[200px] sm:w-[250px] md:w-1/2 lg:w-full'>
         <Image
+          unoptimized
           alt={blog.title}
           src={blog.cover ? blog.cover.url : blog.poster.url}
           width={500}

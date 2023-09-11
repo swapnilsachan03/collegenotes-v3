@@ -37,23 +37,17 @@ const BlogsManager: React.FC<BlogsManagerProps> = async ({
       <AdminNavbar />
 
       <div className='
-        flex flex-row
-        justify-around
+        flex flex-col
+        items-center
         min-h-[90vh]
         w-full
       '>
-        <div className='
-          flex flex-col
-          items-center
-          h-full
-          mx-3 my-10
-          w-[1200px]
-        '>
-          <h1 className='text-4xl font-extrabold pb-8 text-center'>
-            Blog Manager
-          </h1>
+        <h1 className='text-4xl font-extrabold py-10 text-center'>
+          Blog Manager
+        </h1>
 
-          <table className='w-full'>
+        <div className='w-full overflow-auto xl:flex xl:flex-col items-center'>
+          <table className='w-[1250px] mx-5'>
             <caption className='caption-bottom mt-5 text-[15px] font-medium text-neutral-600 dark:text-neutral-300'>
               All saved blogs in the DB
             </caption>
@@ -108,4 +102,4 @@ const BlogsManager: React.FC<BlogsManagerProps> = async ({
   )
 }
 
-export default BlogsManager;
+export default BlogsManager

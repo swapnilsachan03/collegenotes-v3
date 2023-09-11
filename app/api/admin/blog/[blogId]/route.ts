@@ -19,7 +19,7 @@ export async function DELETE (
     return NextResponse.error();
   }
 
-  if(currentUser.role != 'admin') {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
     return NextResponse.error();
   }
 
@@ -37,6 +37,10 @@ export async function DELETE (
 
   if(!toDelete) {
     throw new Error('Blog not found');
+  }
+
+  if(toDelete?.authorId != currentUser.id && currentUser.role != 'admin' && currentUser.role != 'moderator') {
+    return NextResponse.error();
   }
 
   await deleteFile(toDelete.poster.name);
@@ -75,7 +79,7 @@ export async function PUT (
     return NextResponse.error();
   }
 
-  if(currentUser.role != 'admin') {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
     return NextResponse.error();
   }
 
@@ -83,6 +87,20 @@ export async function PUT (
 
   if(!blogId || typeof blogId != 'string') {
     throw new Error('Invalid ID');
+  }
+
+  const blog = await prisma.blog.findUnique({
+    where: {
+      blogId
+    }
+  });
+
+  if(!blog) {
+    return Error("Blog not found.");
+  }
+
+  if(blog.authorId != currentUser.id && currentUser.role != 'admin' && currentUser.role != 'moderator') {
+    return NextResponse.error();
   }
 
   const formData = await request.formData();
@@ -101,16 +119,6 @@ export async function PUT (
 
   if(!title || !id || !headline || !summary || !metaDescription || !metaKeywords || !content || !categoryId || !categoryName) {
     return Error("Missing fields.");
-  }
-
-  const blog = await prisma.blog.findUnique({
-    where: {
-      blogId
-    }
-  });
-
-  if(!blog) {
-    return Error("Blog not found.");
   }
 
   var posterFileName = blog.poster.name;

@@ -12,7 +12,11 @@ const currentUser = await getCurrentUser();
     return null;
   }
 
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    include: {
+      accounts: { select: { provider: true }},
+    }
+  });
 
   return users;
 }

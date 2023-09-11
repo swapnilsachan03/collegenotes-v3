@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SearchBar from '../components/SearchBar';
+import SearchBar from '@/app/components/SearchBar';
 import SubjectCard from './SubjectCard';
 import getSubjects from '../actions/getSubjects';
 

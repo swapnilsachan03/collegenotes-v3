@@ -1,8 +1,8 @@
 import React from 'react';
 import { RiArrowRightUpLine } from 'react-icons/ri';
 
-import Avatar from '../components/Avatar';
-import OutlineButton from '../components/buttons/OutlineButton';
+import Avatar from '@/app/components/Avatar';
+import OutlineButton from '@/app/components/buttons/OutlineButton';
 
 export const metadata = {
   title: 'About Us - CollegeNotes',

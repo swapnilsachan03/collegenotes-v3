@@ -55,7 +55,7 @@ const Profile = async () => {
 
   return (
     <ProfileViewer
-      user={user as User}
+      user={user as User & { blogs: any[] }}
       favorites={favorites}
       bookmarks={bookmarks}
     />

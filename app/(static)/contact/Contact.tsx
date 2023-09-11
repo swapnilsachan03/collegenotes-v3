@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { MdSend } from 'react-icons/md';
 
-import Input from '../components/inputs/Input';
-import FlushedTextarea from '../components/inputs/FlushedTextarea';
-import SolidButton from '../components/buttons/SolidButton';
+import Input from '@/app/components/inputs/Input';
+import FlushedTextarea from '@/app/components/inputs/FlushedTextarea';
+import SolidButton from '@/app/components/buttons/SolidButton';
 
 const submitHandler = (e: any) => {
   e.preventDefault();
