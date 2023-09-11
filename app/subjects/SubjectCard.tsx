@@ -9,8 +9,8 @@ import { toast } from 'react-hot-toast';
 import { FiArrowUpRight } from 'react-icons/fi';
 import { FaHeart } from 'react-icons/fa';
 
-import SolidButton from '../components/buttons/SolidButton';
-import IconButton from '../components/buttons/IconButton';
+import SolidButton from '@/app/components/buttons/SolidButton';
+import IconButton from '@/app/components/buttons/IconButton';
 import { Subject } from '@prisma/client';
 
 interface SubjectCardProps {
