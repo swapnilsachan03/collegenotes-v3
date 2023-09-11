@@ -22,6 +22,8 @@ export const metadata = {
   },
 }
 
+type SafeUser = User & { accounts: any[] };
+
 const Page = async () => {
   const users = await getAdminUsers();
 
@@ -32,7 +34,7 @@ const Page = async () => {
   }
 
   return (
-    <Users users={users as User[]} />
+    <Users users={users as SafeUser[]} />
   )
 }
 
