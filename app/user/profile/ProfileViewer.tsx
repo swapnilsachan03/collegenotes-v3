@@ -60,6 +60,17 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
     }
   };
 
+  const deleteBlog = async (blogId: string) => {
+    await axios.delete(`/api/admin/blog/${blogId}`)
+    .then(() => {
+      toast.success('Blog deleted successfully!');
+      window.location.reload();
+    })
+    .catch((err) => {
+      toast.error('Something went wrong');
+    });
+  }
+
   return (
     <div className='
       flex flex-col gap-14
@@ -224,7 +235,7 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
     
                       <td className='py-4 flex flex-row gap-3 justify-end'>
                         <Link
-                          href={`/admin/edit-blog/${blog.blogId}`}
+                          href={`/edit-blog/${blog.blogId}`}
                           target='_blank'
                         >
                           <OutlineButton
@@ -237,7 +248,7 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
                         <SolidButton
                           color='red'
                           rightIcon={RiDeleteBin3Fill}
-                          // onClick={() => deleteBlog(blog.blogId)}
+                          onClick={() => deleteBlog(blog.blogId)}
                         />
                       </td>
                     </tr>
