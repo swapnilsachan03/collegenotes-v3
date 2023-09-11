@@ -33,6 +33,7 @@ const ProfileNotesCard: React.FC<ProfileNotesCardProps> = ({
       '
     >
       <Image
+        unoptimized
         alt={`${notes.title} icon`}
         src='/images/bookmark.png'
         loading="lazy"

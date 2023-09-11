@@ -33,6 +33,7 @@ const ProfileSubjectCard: React.FC<ProfileSubjectCardProps> = ({
       '
     >
       <Image
+        unoptimized
         alt={`${subject.name} icon`}
         src="/images/favorite.png"
         loading="lazy"

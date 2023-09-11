@@ -158,7 +158,7 @@ export default function Home() {
         justify-between
       '>
         <Image
-          alt="Girl taking notes"
+          alt="How to use illustration"
           src='/images/best-use-illustration.png'
           loading="lazy"
           width={500}

@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import axios from 'axios';
-import React, { Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import Avatar from '@/app/components/Avatar';
@@ -11,15 +10,16 @@ import SolidButton from '@/app/components/buttons/SolidButton';
 import ProfileNotesCard from './ProfileNotesCard';
 import ProfileSubjectCard from './ProfileSubjectCard';
 import Input from '@/app/components/inputs/Input';
-import { Notes, Subject, User } from '@prisma/client';
+import { Blog, Notes, Subject, User } from '@prisma/client';
 
 import { FaDonate, FaUserEdit, FaUserMinus } from 'react-icons/fa';
-import { RiDashboardFill } from 'react-icons/ri';
-import { RxCross2 } from 'react-icons/rx';
+import { RiDashboardFill, RiDeleteBin3Fill } from 'react-icons/ri';
 import { FiArrowUpRight } from 'react-icons/fi';
+import Modal from '@/app/components/Modal';
+import OutlineButton from '@/app/components/buttons/OutlineButton';
 
 interface ProfileViewerProps {
-  user: User;
+  user: User & { blogs: Blog[] };
   favorites: Subject[];
   bookmarks: Notes[];
 }
@@ -28,7 +28,7 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
   user, favorites, bookmarks
 }) => {
   const [editOpen, setEditOpen] = useState(false);
-  const toggleDeleteOpen = () => setEditOpen(!editOpen);
+  const toggleEditOpen = () => setEditOpen(!editOpen);
 
   const memberSince = new Date(user.createdAt);
 
@@ -102,7 +102,7 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
               color='teal'
               label='Edit Profile'
               leftIcon={FaUserEdit}
-              onClick={toggleDeleteOpen}
+              onClick={toggleEditOpen}
             />
 
             { user?.role === 'admin' ? (
@@ -123,8 +123,15 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
               </Link>
             )}
           </div>
+
+          { (user.role == 'blogger' || user.role == 'moderator') &&  (
+            <h3 className='text-sm text-center mt-4'>
+              Want to write a new blog? <Link href='/new-blog' className='text-teal-500 hover:underline'>Start here!</Link>
+            </h3>
+          )}
         </div>
       </div>
+
 
       <hr/>
 
@@ -180,7 +187,73 @@ const ProfileViewer: React.FC<ProfileViewerProps> = ({
         )}
       </div>
 
-      <EditProfile isOpen={editOpen} toggleOpen={toggleDeleteOpen} user={user} />
+      { (user.role == 'admin' || user.role == 'moderator' || user.role == 'blogger') && (
+        <>
+          <hr/>
+
+          <h2 className='text-4xl text-center font-bold mb-0'>
+            Your Blogs
+          </h2>
+          
+          <div className='w-full overflow-auto'>
+            { user.blogs.length > 0 ? (
+              <table className='w-[1200px] 2xl:w-full'>
+                <caption className='caption-bottom mt-5 text-[15px] font-medium text-neutral-600 dark:text-neutral-300'>
+                  All your blogs on CollegeNotes
+                </caption>
+
+                <thead className='text-left'>
+                  <tr className='border-b-[1px] border-gray-100 dark:border-neutral-700'>
+                    <th className='py-4'>Blog ID</th>
+                    <th className='py-4'>Blog Title</th>
+                    <th className='py-4'>Category</th>
+                    <th className='py-4 text-right'>Published</th>
+                    <th className='py-4 text-right'>Views</th>
+                    <th className='py-4 text-right'>Action</th>
+                  </tr>
+                </thead>
+    
+                <tbody>
+                  { user.blogs.map((blog: Blog) => (
+                    <tr key={blog.id} className='border-b-[1px] border-gray-100 dark:border-neutral-700'>
+                      <td className='py-4'>{blog.blogId}</td>
+                      <td className='py-4'>{blog.title}</td>
+                      <td className='py-4'>{blog.categoryName}</td>
+                      <td className='py-4 text-right'> { blog.published == true ? "Yes" : "No" } </td>
+                      <td className='py-4 text-right'> { blog.views } </td>
+    
+                      <td className='py-4 flex flex-row gap-3 justify-end'>
+                        <Link
+                          href={`/admin/edit-blog/${blog.blogId}`}
+                          target='_blank'
+                        >
+                          <OutlineButton
+                            color='cyan'
+                            label='Edit'
+                            rightIcon={FiArrowUpRight}
+                          />
+                        </Link>
+                        
+                        <SolidButton
+                          color='red'
+                          rightIcon={RiDeleteBin3Fill}
+                          // onClick={() => deleteBlog(blog.blogId)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className='italic text-secondary mt-2.5'>
+                You have not written any blogs yet.
+              </p>
+            )}
+          </div>
+        </>
+      )}
+
+      <EditProfile isOpen={editOpen} toggleOpen={toggleEditOpen} user={user} />
     </div>
   )
 }
@@ -230,121 +303,77 @@ const EditProfile: React.FC<EditProfileProps> = ({ isOpen, toggleOpen, user }) =
   }
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={() => {
-          toggleOpen();
-          setImagePrev(user.avatar?.url);
-        }}
-      >
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-md" />
-        </Transition.Child>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        toggleOpen();
+        setImagePrev(user.avatar?.url);
+      }}
+      modalHeader='Edit Profile'
+    >
+      <form onSubmit={(e: any) => onSubmit(e)} className='flex flex-col items-center justify-center gap-6 w-full'>
+        <div></div>
+        <Avatar
+          alt="Profile Picture"
+          src={imagePrev!}
+          size={44}
+        />
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+        <div className='flex flex-col items-center gap-2'>
+          <input
+            accept='image/*'
+            type='file'
+            id='avatar'
+            className='hidden'
+            onChange={changeImageHandler}
+          />
+
+          <SolidButton
+            color='teal'
+            leftIcon={FaUserEdit}
+          >
+            <label htmlFor="avatar" className='cursor-pointer'>Change Profile Picture</label>
+          </SolidButton>
+
+          <p className='text-sm text-neutral-500 dark:text-neutral-400'>Only .jpg, .jpeg, .png files are allowed.</p>
+        </div>
+
+        <div className='flex flex-col gap-0.5 w-full'>
+          <label className='text-xs font-semibold'>Name</label>
+          <Input
+            type="Name"
+            placeholder="John Doe"
+            value={name!}
+            color='teal'
+            onChange={setName}
+          />
+
+          <div className='mt-2 w-full'>
+            <Link
+              href="/user/change-password"
+              className='text-left text-[13px] text-neutral-500 dark:text-neutral-200 font-semibold hover:underline'
             >
-              <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-xl bg-secondary p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title className='w-full flex flex-row justify-between items-center'>
-                  <p className='font-semibold'> Edit Profile </p>
-
-                  <button
-                    className='flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors'
-                    onClick={() => {
-                      toggleOpen();
-                      setImagePrev(user.avatar?.url);
-                    }}
-                  >
-                    <RxCross2 />
-                  </button>
-                </Dialog.Title>
-
-                <form onSubmit={(e: any) => onSubmit(e)} className='flex flex-col items-center justify-center gap-6 w-full'>
-                  <div></div>
-                  <Avatar
-                    alt="Profile Picture"
-                    src={imagePrev!}
-                    size={44}
-                  />
-
-                  <div className='flex flex-col items-center gap-2'>
-                    <input
-                      accept='image/*'
-                      type='file'
-                      id='avatar'
-                      className='hidden'
-                      onChange={changeImageHandler}
-                    />
-
-                    <SolidButton
-                      color='teal'
-                      leftIcon={FaUserEdit}
-                    >
-                      <label htmlFor="avatar" className='cursor-pointer'>Change Profile Picture</label>
-                    </SolidButton>
-
-                    <p className='text-sm text-neutral-500 dark:text-neutral-400'>Only .jpg, .jpeg, .png files are allowed.</p>
-                  </div>
-
-                  <div className='flex flex-col gap-0.5 w-full'>
-                    <label className='text-xs font-semibold'>Name</label>
-                    <Input
-                      type="Name"
-                      placeholder="John Doe"
-                      value={name!}
-                      color='teal'
-                      onChange={setName}
-                    />
-
-                    <div className='mt-2 w-full'>
-                      <Link
-                        href="/user/change-password"
-                        className='text-left text-[13px] text-neutral-500 dark:text-neutral-200 font-semibold hover:underline'
-                      >
-                        Change Password <FiArrowUpRight className='inline-block' size={15} />
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className='w-full flex flex-row justify-end gap-2'>
-                    <SolidButton
-                      color='red'
-                      label='Delete Account'
-                      leftIcon={FaUserMinus}
-                      onClick={() => {}}
-                    />
-
-                    <SolidButton
-                      color='teal'
-                      label='Update'
-                      submit={true}
-                      leftIcon={FaUserEdit}
-                    />
-                  </div>
-                </form>
-              </Dialog.Panel>
-            </Transition.Child>
+              Change Password <FiArrowUpRight className='inline-block' size={15} />
+            </Link>
           </div>
         </div>
-      </Dialog>
-    </Transition>
+
+        <div className='w-full flex flex-row justify-end gap-2'>
+          <SolidButton
+            color='red'
+            label='Delete Account'
+            leftIcon={FaUserMinus}
+            onClick={() => {}}
+          />
+
+          <SolidButton
+            color='teal'
+            label='Update'
+            submit={true}
+            leftIcon={FaUserEdit}
+          />
+        </div>
+      </form>
+    </Modal>
   )
 }

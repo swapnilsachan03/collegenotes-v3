@@ -13,6 +13,7 @@ export async function PUT (
   { params }: { params: IParams }
 ) {
   const currentUser = await getCurrentUser();
+  const { role } = await request.json();
 
   if(!currentUser) {
     return NextResponse.error();
@@ -38,33 +39,19 @@ export async function PUT (
     return Error('User not found');
   }
 
-  if(user.role === 'admin') {
-    return Error('You cannot update admin role');
+  if(user.role === 'admin' || role === 'admin') {
+    return Error('You cannot modify admin roles');
   }
 
-  if(user.role === "user") {
-    await prisma.user.update({
-      where: {
-        id: userId
-      },
+  await prisma.user.update({
+    where: {
+      id: userId
+    },
 
-      data: {
-        role: "editor"
-      }
-    });
-  }
-  
-  else if(user.role === "editor") {
-    await prisma.user.update({
-      where: {
-        id: userId
-      },
-
-      data: {
-        role: "user"
-      }
-    });
-  }
+    data: {
+      role
+    }
+  });
 
   return NextResponse.json({ message: "User role updated successfully" });
 }

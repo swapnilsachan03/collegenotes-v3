@@ -45,6 +45,27 @@ const OutlineButton: React.FC<ButtonProps> = ({
         rounded-md
         transition ease-linear duration-200
       `
+    
+    case 'red':
+      btnClass = `
+        flex
+        items-center
+        justify-center
+        gap-2
+        h-8
+        px-3
+        text-sm
+        text-red-600
+        dark:text-red-400
+        font-semibold
+        border-[1px]
+        border-red-600
+        dark:border-red-400
+        bg-transparent
+        hover:bg-red-400/10
+        rounded-md
+        transition ease-linear duration-200
+      `
       break;
 
     case 'cyan':

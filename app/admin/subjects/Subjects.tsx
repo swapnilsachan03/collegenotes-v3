@@ -34,24 +34,17 @@ const Subjects: React.FC<SubjectsProps> = ({ subjects }) => {
       <AdminNavbar />
 
       <div className='
-        flex flex-row
-        justify-around
+        flex flex-col
+        items-center
         min-h-[90vh]
         w-full
       '>
-        <div className='
-          flex flex-col
-          items-center
-          h-full
-          mx-3 my-10
-          w-full overflow-auto
-          xl:w-[1200px]
-        '>
-          <h1 className='text-4xl font-extrabold pb-8 text-center'>
-            Subjects Manager
-          </h1>
+        <h1 className='text-4xl font-extrabold py-10 text-center'>
+          Subjects Manager
+        </h1>
 
-          <table className='w-[1100px]'>
+        <div className='w-full overflow-auto xl:flex xl:flex-col items-center'>
+          <table className='w-[1250px] mx-5'>
             <caption className='caption-bottom mt-5 text-[15px] font-medium text-neutral-600 dark:text-neutral-300'>
               All saved subjects in the DB
             </caption>
