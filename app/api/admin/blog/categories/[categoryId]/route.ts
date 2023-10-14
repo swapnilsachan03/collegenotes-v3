@@ -22,6 +22,16 @@ export async function PUT (
     return NextResponse.error();
   }
 
+  const category = await prisma.category.findUnique({
+    where: {
+      categoryId
+    }
+  });
+
+  if(!category) {
+    throw new Error('Category not found');
+  }
+
   await prisma.category.update({
     where: {
       categoryId
@@ -31,6 +41,16 @@ export async function PUT (
       categoryId: newId,
       name,
       description
+    }
+  });
+
+  await prisma.blog.updateMany({
+    where: {
+      categoryId: category.id
+    },
+
+    data: {
+      categoryName: name
     }
   });
 
@@ -45,6 +65,16 @@ export async function PUT (
 
   if(!categoryId || typeof categoryId != 'string') {
     throw new Error('Invalid ID');
+  }
+
+  const category = await prisma.category.findUnique({
+    where: {
+      categoryId
+    }
+  });
+
+  if(!category) {
+    throw new Error('Category not found');
   }
 
   await prisma.category.delete({
