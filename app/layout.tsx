@@ -86,6 +86,8 @@ export default async function RootLayout({
             gtag('config', 'G-M2VTB22JD3');
           `}
         </Script>
+
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3309007161080471" crossOrigin="anonymous" />
       </head>
 
       <body className={`${inter.className} transition ease-linear duration-200`}>
