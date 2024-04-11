@@ -1,7 +1,5 @@
 import { Metadata, ResolvingMetadata } from 'next';
 
-import { Notes } from '@prisma/client';
-
 import Viewer from './Viewer';
 import NotFound from '@/app/not-found';
 import getNotesById from '@/app/actions/getNotesById';
