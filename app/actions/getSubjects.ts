@@ -1,18 +1,22 @@
 import prisma from "@/app/libs/prismadb";
 import { getObjectSignedUrl } from "@/app/libs/s3";
 
-export default async function getSubjects(keywords: string, degree: string, year: string) {
+export default async function getSubjects(
+  keywords: string,
+  degree: string,
+  year: string
+) {
   let query: any = {};
 
-  if(keywords) query.name = { contains: keywords, mode: "insensitive" };
-  if(degree) query.degree = { contains: degree, mode: "insensitive" };
-  if(year) query.year = { contains: year, mode: "insensitive" };
+  if (keywords) query.name = { contains: keywords, mode: "insensitive" };
+  if (degree) query.degree = { contains: degree, mode: "insensitive" };
+  if (year) query.year = { contains: year, mode: "insensitive" };
 
   const subjects = await prisma.subject.findMany({
     where: query,
 
     orderBy: {
-      createdAt: 'desc'
+      createdAt: "desc",
     },
 
     select: {
@@ -25,18 +29,18 @@ export default async function getSubjects(keywords: string, degree: string, year
       notes: true,
       icon: true,
       availableNotes: true,
-      views: true
-    }
+      views: true,
+    },
   });
 
-  for(let i = 0; i < subjects.length; i++) {
+  for (let i = 0; i < subjects.length; i++) {
     subjects[i] = {
       ...subjects[i],
       icon: {
         url: await getObjectSignedUrl(subjects[i].icon.name),
-        name: subjects[i].icon.name
-      }
-    }
+        name: subjects[i].icon.name,
+      },
+    };
   }
 
   return subjects;

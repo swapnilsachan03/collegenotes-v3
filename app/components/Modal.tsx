@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import React, { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { RxCross2 } from 'react-icons/rx';
+import React, { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { RxCross2 } from "react-icons/rx";
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,15 +12,14 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({
-  isOpen, onClose, modalHeader, children
+  isOpen,
+  onClose,
+  modalHeader,
+  children,
 }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -45,11 +44,11 @@ const Modal: React.FC<ModalProps> = ({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-xl bg-secondary p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title className='w-full flex flex-row justify-between items-center'>
-                  <p className='font-semibold'> {modalHeader} </p>
+                <Dialog.Title className="w-full flex flex-row justify-between items-center">
+                  <p className="font-semibold"> {modalHeader} </p>
 
                   <button
-                    className='flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors'
+                    className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
                     onClick={onClose}
                   >
                     <RxCross2 />
@@ -63,7 +62,7 @@ const Modal: React.FC<ModalProps> = ({
         </div>
       </Dialog>
     </Transition>
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;

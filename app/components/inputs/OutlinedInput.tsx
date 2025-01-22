@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react'
+import React from "react";
 
 interface InputProps {
   placeholder: string;
@@ -19,9 +19,9 @@ const OutlinedInput: React.FC<InputProps> = ({
   onChange,
   type,
   disabled,
-  required
+  required,
 }) => {
-  var inputClass = '';
+  var inputClass = "";
 
   switch (color) {
     default:
@@ -42,7 +42,7 @@ const OutlinedInput: React.FC<InputProps> = ({
         focus:shadow-[0_0_0_1px_rgba(0,181,216)]
         transition ease-linear duration-200
         focus:outline-none
-      `
+      `;
       break;
   }
 
@@ -53,10 +53,12 @@ const OutlinedInput: React.FC<InputProps> = ({
       value={value}
       required={required}
       disabled={disabled}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange(e.target.value)
+      }
       className={inputClass}
     />
-  )
-}
+  );
+};
 
-export default OutlinedInput
+export default OutlinedInput;

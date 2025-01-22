@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface InputProps {
   placeholder: string;
@@ -19,9 +19,9 @@ const Input: React.FC<InputProps> = ({
   onChange,
   type,
   disabled,
-  required
+  required,
 }) => {
-  var inputClass = '';
+  var inputClass = "";
 
   switch (color) {
     default:
@@ -38,7 +38,7 @@ const Input: React.FC<InputProps> = ({
         dark:focus:border-teal-500
         transition ease-linear duration-200
         focus:outline-none
-      `
+      `;
       break;
   }
 
@@ -49,10 +49,12 @@ const Input: React.FC<InputProps> = ({
       value={value}
       required={required}
       disabled={disabled}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange(e.target.value)
+      }
       className={inputClass}
     />
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

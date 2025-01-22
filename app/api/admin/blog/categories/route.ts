@@ -1,20 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 import prisma from "@/app/libs/prismadb";
 
-export async function POST (
-  request: Request
-) {
+export async function POST(request: Request) {
   const { categoryId, name, description } = await request.json();
-  if(!categoryId || !name || !description) return NextResponse.error();
+  if (!categoryId || !name || !description) return NextResponse.error();
 
   const category = await prisma.category.create({
     data: {
       categoryId,
       name,
-      description
-    }
+      description,
+    },
   });
 
-  return NextResponse.json({ message: "Category created successfully", category });
+  return NextResponse.json({
+    message: "Category created successfully",
+    category,
+  });
 }

@@ -12,13 +12,13 @@ export default async function getCurrentUser() {
   try {
     const session = await getSession();
 
-    if(!session?.user?.email) {
+    if (!session?.user?.email) {
       return null;
     }
 
     const currentUser = await prisma.user.findUnique({
       where: {
-        email: session.user.email as string
+        email: session.user.email as string,
       },
 
       include: {
@@ -32,20 +32,22 @@ export default async function getCurrentUser() {
             views: true,
             createdAt: true,
             updatedAt: true,
-          }
+          },
         },
-      }
+      },
     });
 
-    if(!currentUser) {
+    if (!currentUser) {
       return null;
     }
 
-    if(currentUser.avatar?.name) {
-      currentUser.avatar.url = await getObjectSignedUrl(currentUser.avatar.name);
+    if (currentUser.avatar?.name) {
+      currentUser.avatar.url = await getObjectSignedUrl(
+        currentUser.avatar.name
+      );
       return currentUser;
     }
-    
+
     return currentUser;
   } catch (error: any) {
     return null;

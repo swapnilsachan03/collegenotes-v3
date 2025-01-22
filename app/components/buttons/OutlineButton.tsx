@@ -1,5 +1,5 @@
-import React from 'react'
-import { IconType } from 'react-icons';
+import React from "react";
+import { IconType } from "react-icons";
 
 interface ButtonProps {
   color: string;
@@ -20,12 +20,12 @@ const OutlineButton: React.FC<ButtonProps> = ({
   submit,
   rightIcon: RightIcon,
   leftIcon: LeftIcon,
-  onClick
+  onClick,
 }) => {
-  var btnClass = '';
+  var btnClass = "";
 
   switch (color) {
-    case 'teal':
+    case "teal":
       btnClass = `
         flex
         items-center
@@ -44,9 +44,9 @@ const OutlineButton: React.FC<ButtonProps> = ({
         hover:bg-teal-400/10
         rounded-md
         transition ease-linear duration-200
-      `
-    
-    case 'red':
+      `;
+
+    case "red":
       btnClass = `
         flex
         items-center
@@ -65,10 +65,10 @@ const OutlineButton: React.FC<ButtonProps> = ({
         hover:bg-red-400/10
         rounded-md
         transition ease-linear duration-200
-      `
+      `;
       break;
 
-    case 'cyan':
+    case "cyan":
       btnClass = `
         flex
         items-center
@@ -87,7 +87,7 @@ const OutlineButton: React.FC<ButtonProps> = ({
         hover:bg-cyan-400/10
         rounded-md
         transition ease-linear duration-200
-      `
+      `;
       break;
   }
 
@@ -115,12 +115,12 @@ const OutlineButton: React.FC<ButtonProps> = ({
       `}
       onClick={onClick}
     >
-      { LeftIcon && <LeftIcon /> }
-      { label && <text> {label} </text>}
-      { !label && children }
-      { RightIcon && <RightIcon /> }
+      {LeftIcon && <LeftIcon />}
+      {label && <text> {label} </text>}
+      {!label && children}
+      {RightIcon && <RightIcon />}
     </button>
-  )
-}
+  );
+};
 
 export default OutlineButton;

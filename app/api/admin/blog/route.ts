@@ -3,16 +3,25 @@ import sharp from "sharp";
 
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { deleteFile, generateFileName, getObjectSignedUrl, uploadFile } from "@/app/libs/s3";
+import {
+  deleteFile,
+  generateFileName,
+  getObjectSignedUrl,
+  uploadFile,
+} from "@/app/libs/s3";
 
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
-  if(!currentUser) {
+  if (!currentUser) {
     return NextResponse.error();
   }
 
-  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
+  if (
+    currentUser.role != "admin" &&
+    currentUser.role != "moderator" &&
+    currentUser.role != "blogger"
+  ) {
     return NextResponse.error();
   }
 
@@ -30,7 +39,18 @@ export async function POST(request: Request) {
   const poster = formData.get("poster") as File;
   const cover = formData.get("cover") as File;
 
-  if(!title || !blogId || !headline || !summary || !metaDescription || !metaKeywords || !content || !categoryId || !categoryName || !poster) {
+  if (
+    !title ||
+    !blogId ||
+    !headline ||
+    !summary ||
+    !metaDescription ||
+    !metaKeywords ||
+    !content ||
+    !categoryId ||
+    !categoryName ||
+    !poster
+  ) {
     return Error("Missing fields.");
   }
 
@@ -39,9 +59,9 @@ export async function POST(request: Request) {
   const posterBuffer = Buffer.from(await poster.arrayBuffer());
   await uploadFile(posterBuffer, posterFileName, poster.type);
 
-  let coverFileName = '';
+  let coverFileName = "";
 
-  if(cover.name != undefined) {
+  if (cover.name != undefined) {
     const fileBuffer = await cover.arrayBuffer();
     coverFileName = generateFileName(cover.name);
 
@@ -49,19 +69,17 @@ export async function POST(request: Request) {
       sharp(fileBuffer)
         .resize({
           width: 800,
-          fit: sharp.fit.cover
+          fit: sharp.fit.cover,
         })
         .toBuffer(async (err, buffer, info) => {
-          if(buffer) {
+          if (buffer) {
             await uploadFile(buffer, coverFileName, cover.type);
             resolve(true);
-          }
-
-          else {
+          } else {
             return Error("Error while uploading image.");
           }
-        })
-    })
+        });
+    });
   }
 
   try {
@@ -76,34 +94,37 @@ export async function POST(request: Request) {
         content,
         poster: {
           name: posterFileName,
-          url: await getObjectSignedUrl(posterFileName)
+          url: await getObjectSignedUrl(posterFileName),
         },
-        cover: coverFileName != '' ? {
-          name: coverFileName,
-          url: await getObjectSignedUrl(coverFileName)
-        } : null,
+        cover:
+          coverFileName != ""
+            ? {
+                name: coverFileName,
+                url: await getObjectSignedUrl(coverFileName),
+              }
+            : null,
         authorId: currentUser.id,
         authorName: currentUser.name!,
         authorImage: currentUser.avatar ? currentUser.avatar : null,
         categoryId,
         categoryName,
-        published: true
-      }
+        published: true,
+      },
     });
 
     const stats = await prisma.stats.findMany({
-      take: 1
+      take: 1,
     });
 
     await prisma.stats.update({
       where: {
-        id: stats[0].id
+        id: stats[0].id,
       },
 
       data: {
         blogs: await prisma.blog.count(),
-        updatedAt: new Date(Date.now())
-      }
+        updatedAt: new Date(Date.now()),
+      },
     });
 
     return NextResponse.json({ message: "Blog uploaded successfully.", blog });

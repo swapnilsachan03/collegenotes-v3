@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import React from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const AdminNavbar = () => {
   return (
-    <div className='
+    <div
+      className="
       flex flex-row
       gap-2 sm:gap-4 w-full
       overflow-auto
@@ -14,26 +15,27 @@ const AdminNavbar = () => {
       justify-center
       h-12
       bg-neutral-900
-    '>
-      <LinkButton href='dashboard' text='Dashboard' />
-      <p className='text-sm text-neutral-400'>|</p>
+    "
+    >
+      <LinkButton href="dashboard" text="Dashboard" />
+      <p className="text-sm text-neutral-400">|</p>
 
-      <LinkButton href='add-subject' text='Add Subject' />
-      <p className='text-sm text-neutral-400'>|</p>
+      <LinkButton href="add-subject" text="Add Subject" />
+      <p className="text-sm text-neutral-400">|</p>
 
-      <LinkButton href='subjects' text='Subjects' />
-      <p className='text-sm text-neutral-400'>|</p>
+      <LinkButton href="subjects" text="Subjects" />
+      <p className="text-sm text-neutral-400">|</p>
 
-      <LinkButton href='new-blog' text='New Blog' />
-      <p className='text-sm text-neutral-400'>|</p>
+      <LinkButton href="new-blog" text="New Blog" />
+      <p className="text-sm text-neutral-400">|</p>
 
-      <LinkButton href='blogs' text='Blogs' />
-      <p className='text-sm text-neutral-400'>|</p>
+      <LinkButton href="blogs" text="Blogs" />
+      <p className="text-sm text-neutral-400">|</p>
 
-      <LinkButton href='users' text='Users' />
+      <LinkButton href="users" text="Users" />
     </div>
-  )
-}
+  );
+};
 
 export default AdminNavbar;
 
@@ -52,11 +54,11 @@ const LinkButton: React.FC<LinkButtonProps> = ({ href, text }) => {
         font-medium
         text-sm
         hover:underline
-        ${isActive ? 'text-cyan-400' : 'text-white'}
+        ${isActive ? "text-cyan-400" : "text-white"}
       `}
       href={`/admin/${href}`}
     >
       {text}
     </Link>
-  )
-}
+  );
+};

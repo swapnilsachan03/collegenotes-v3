@@ -7,89 +7,88 @@ interface IParams {
   notesId?: string;
 }
 
-export async function POST (
-  request: Request,
-  { params }: { params: IParams }
-) {
+export async function POST(request: Request, { params }: { params: IParams }) {
   const currentUser = await getCurrentUser();
 
-  if(!currentUser) {
+  if (!currentUser) {
     return NextResponse.error();
   }
 
   const { notesId } = params;
 
-  if(!notesId || typeof notesId != 'string') {
-    throw new Error('Invalid ID');
+  if (!notesId || typeof notesId != "string") {
+    throw new Error("Invalid ID");
   }
 
   const notes = await prisma.notes.findUnique({
     where: {
-      id: notesId
-    }
+      id: notesId,
+    },
   });
 
-  if(!notes) {
-    return Error('Notes not found');
+  if (!notes) {
+    return Error("Notes not found");
   }
 
-  if(currentUser.bookmarks.includes(notes.id)) {
-    return NextResponse.json({ message: 'Already bookmarked' });
-  };
+  if (currentUser.bookmarks.includes(notes.id)) {
+    return NextResponse.json({ message: "Already bookmarked" });
+  }
 
   const bookmarks = currentUser.bookmarks;
   bookmarks.push(notes.id);
 
   await prisma.user.update({
     where: {
-      id: currentUser.id
+      id: currentUser.id,
     },
 
     data: {
-      bookmarks: bookmarks
-    }
+      bookmarks: bookmarks,
+    },
   });
 
-  return NextResponse.json({ message: 'Notes bookmarked successfully' });
+  return NextResponse.json({ message: "Notes bookmarked successfully" });
 }
 
-export async function DELETE (
+export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
   const currentUser = await getCurrentUser();
 
-  if(!currentUser) {
+  if (!currentUser) {
     return NextResponse.error();
   }
 
   const { notesId } = params;
 
-  if(!notesId || typeof notesId != 'string') {
-    throw new Error('Invalid ID');
+  if (!notesId || typeof notesId != "string") {
+    throw new Error("Invalid ID");
   }
 
   const notes = await prisma.notes.findUnique({
     where: {
-      id: notesId
-    }
+      id: notesId,
+    },
   });
 
-  if(!notes) {
-    return Error('Notes not found');
+  if (!notes) {
+    return Error("Notes not found");
   }
 
-  const bookmarks = currentUser.bookmarks.filter(bookmark => bookmark != notes.id);
+  const bookmarks = currentUser.bookmarks.filter(
+    bookmark => bookmark != notes.id
+  );
 
   await prisma.user.update({
     where: {
-      id: currentUser.id
+      id: currentUser.id,
     },
 
     data: {
-      bookmarks: bookmarks
-    }
+      bookmarks: bookmarks,
+    },
   });
 
-  return NextResponse.json({ message: 'Removed from bookmarks' });
+  return NextResponse.json({ message: "Removed from bookmarks" });
 }

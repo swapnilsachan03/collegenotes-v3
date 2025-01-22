@@ -1,12 +1,12 @@
 import prisma from "@/app/libs/prismadb";
 import { getObjectSignedUrl } from "@/app/libs/s3";
 
-export async function getSubjectMeta (subjectId: string) {
-  if(subjectId === '') return null;
+export async function getSubjectMeta(subjectId: string) {
+  if (subjectId === "") return null;
 
   const subject = await prisma.subject.findUnique({
     where: {
-      subjectId
+      subjectId,
     },
 
     select: {
@@ -14,8 +14,8 @@ export async function getSubjectMeta (subjectId: string) {
       name: true,
       poster: true,
       seoDescription: true,
-      seoKeywords: true
-    }
+      seoKeywords: true,
+    },
   });
 
   if (!subject) {

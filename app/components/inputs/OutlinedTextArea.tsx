@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 interface InputProps {
   placeholder: string;
@@ -15,7 +15,7 @@ const OutlinedTextArea: React.FC<InputProps> = ({
   value,
   onChange,
   disabled,
-  required
+  required,
 }) => {
   return (
     <textarea
@@ -23,7 +23,9 @@ const OutlinedTextArea: React.FC<InputProps> = ({
       value={value}
       required={required}
       disabled={disabled}
-      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+        onChange(e.target.value)
+      }
       className={`
         relative
         w-full
@@ -44,7 +46,7 @@ const OutlinedTextArea: React.FC<InputProps> = ({
         focus:outline-none
       `}
     />
-  )
-}
+  );
+};
 
 export default OutlinedTextArea;

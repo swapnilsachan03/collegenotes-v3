@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
+import React from "react";
+import { usePathname } from "next/navigation";
 
 const Loading = () => {
   const pathname = usePathname();
-  const isAdmin = pathname!.includes('/admin');
+  const isAdmin = pathname!.includes("/admin");
 
   return (
     <>
@@ -72,13 +72,15 @@ const Loading = () => {
         `}
       </style>
 
-      <div className='
+      <div
+        className="
         bg-inherit
         w-full h-[94vh]
         flex flex-col gap-1.5
         items-center justify-center
         text-[14px]
-      '>
+      "
+      >
         <div className="spinner">
           <div></div>
           <div></div>
@@ -88,9 +90,8 @@ const Loading = () => {
           <div></div>
         </div>
       </div>
-    
     </>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;
