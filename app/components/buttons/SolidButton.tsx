@@ -1,5 +1,5 @@
-import React from "react";
-import { IconType } from "react-icons";
+import React from 'react'
+import { IconType } from 'react-icons';
 
 interface ButtonProps {
   color: string;
@@ -20,13 +20,12 @@ const SolidButton: React.FC<ButtonProps> = ({
   submit,
   rightIcon: RightIcon,
   leftIcon: LeftIcon,
-  onClick,
+  onClick
 }) => {
-  var btnClass = "",
-    loadingClass = "";
+  var btnClass = '', loadingClass = '';
 
   switch (color) {
-    case "teal":
+    case 'teal':
       btnClass = `
         flex
         items-center
@@ -44,10 +43,10 @@ const SolidButton: React.FC<ButtonProps> = ({
         dark:hover:bg-teal-500
         rounded-md
         transition ease-linear duration-200
-      `;
+      `
       break;
-
-    case "cyan":
+    
+    case 'cyan':
       btnClass = `
         flex
         items-center
@@ -65,10 +64,10 @@ const SolidButton: React.FC<ButtonProps> = ({
         dark:hover:bg-cyan-500
         rounded-md
         transition ease-linear duration-200
-      `;
+      `
       break;
-
-    case "red":
+    
+    case 'red':
       btnClass = `
         flex
         items-center
@@ -86,12 +85,12 @@ const SolidButton: React.FC<ButtonProps> = ({
         dark:hover:bg-red-500
         rounded-md
         transition ease-linear duration-200
-      `;
+      `
       break;
   }
 
-  if (loading) {
-    loadingClass = "opacity-60 pointer-events-none";
+  if(loading) {
+    loadingClass = 'opacity-60 pointer-events-none'
   }
 
   return (
@@ -100,12 +99,12 @@ const SolidButton: React.FC<ButtonProps> = ({
       className={btnClass + loadingClass}
       onClick={onClick}
     >
-      {LeftIcon && <LeftIcon />}
-      {label && <text> {label} </text>}
-      {!label && children}
-      {RightIcon && <RightIcon />}
+      { LeftIcon && <LeftIcon /> }
+      { label && <text> {label} </text>}
+      { !label && children }
+      { RightIcon && <RightIcon /> }
     </button>
-  );
-};
+  )
+}
 
 export default SolidButton;

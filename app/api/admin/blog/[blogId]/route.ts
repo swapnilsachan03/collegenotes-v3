@@ -3,56 +3,43 @@ import sharp from "sharp";
 
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import {
-  deleteFile,
-  generateFileName,
-  getObjectSignedUrl,
-  uploadFile,
-} from "@/app/libs/s3";
+import { deleteFile, generateFileName, getObjectSignedUrl, uploadFile } from "@/app/libs/s3";
 
 interface IParams {
   blogId?: string;
 }
 
-export async function DELETE(
+export async function DELETE (
   request: Request,
   { params }: { params: IParams }
 ) {
   const currentUser = await getCurrentUser();
 
-  if (!currentUser) {
+  if(!currentUser) {
     return NextResponse.error();
   }
 
-  if (
-    currentUser.role != "admin" &&
-    currentUser.role != "moderator" &&
-    currentUser.role != "blogger"
-  ) {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
     return NextResponse.error();
   }
 
   const { blogId } = params;
 
-  if (!blogId || typeof blogId != "string") {
-    throw new Error("Invalid ID");
+  if(!blogId || typeof blogId != 'string') {
+    throw new Error('Invalid ID');
   }
 
   const toDelete = await prisma.blog.findUnique({
     where: {
-      blogId: blogId,
-    },
+      blogId: blogId
+    }
   });
 
-  if (!toDelete) {
-    throw new Error("Blog not found");
+  if(!toDelete) {
+    throw new Error('Blog not found');
   }
 
-  if (
-    toDelete?.authorId != currentUser.id &&
-    currentUser.role != "admin" &&
-    currentUser.role != "moderator"
-  ) {
+  if(toDelete?.authorId != currentUser.id && currentUser.role != 'admin' && currentUser.role != 'moderator') {
     return NextResponse.error();
   }
 
@@ -60,64 +47,59 @@ export async function DELETE(
 
   await prisma.blog.delete({
     where: {
-      blogId: blogId,
-    },
-  });
+      blogId: blogId
+    }
+  })
 
   const stats = await prisma.stats.findMany({
-    take: 1,
+    take: 1
   });
 
   await prisma.stats.update({
     where: {
-      id: stats[0].id,
+      id: stats[0].id
     },
 
     data: {
       subjects: await prisma.blog.count(),
-      updatedAt: new Date(Date.now()),
-    },
+      updatedAt: new Date(Date.now())
+    }
   });
 
-  return NextResponse.json({ message: "Blog deleted successfully" });
+  return NextResponse.json({ message: 'Blog deleted successfully' });
 }
 
-export async function PUT(request: Request, { params }: { params: IParams }) {
+export async function PUT (
+  request: Request,
+  { params }: { params: IParams }
+) {
   const currentUser = await getCurrentUser();
 
-  if (!currentUser) {
+  if(!currentUser) {
     return NextResponse.error();
   }
 
-  if (
-    currentUser.role != "admin" &&
-    currentUser.role != "moderator" &&
-    currentUser.role != "blogger"
-  ) {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
     return NextResponse.error();
   }
 
   const { blogId } = params;
 
-  if (!blogId || typeof blogId != "string") {
-    throw new Error("Invalid ID");
+  if(!blogId || typeof blogId != 'string') {
+    throw new Error('Invalid ID');
   }
 
   const blog = await prisma.blog.findUnique({
     where: {
-      blogId,
-    },
+      blogId
+    }
   });
 
-  if (!blog) {
+  if(!blog) {
     return Error("Blog not found.");
   }
 
-  if (
-    blog.authorId != currentUser.id &&
-    currentUser.role != "admin" &&
-    currentUser.role != "moderator"
-  ) {
+  if(blog.authorId != currentUser.id && currentUser.role != 'admin' && currentUser.role != 'moderator') {
     return NextResponse.error();
   }
 
@@ -135,23 +117,13 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
   const poster = formData.get("poster") as File;
   const cover = formData.get("cover") as File;
 
-  if (
-    !title ||
-    !id ||
-    !headline ||
-    !summary ||
-    !metaDescription ||
-    !metaKeywords ||
-    !content ||
-    !categoryId ||
-    !categoryName
-  ) {
+  if(!title || !id || !headline || !summary || !metaDescription || !metaKeywords || !content || !categoryId || !categoryName) {
     return Error("Missing fields.");
   }
 
   var posterFileName = blog.poster.name;
 
-  if (poster.name != undefined) {
+  if(poster.name != undefined) {
     await deleteFile(blog?.poster.name as string);
 
     posterFileName = generateFileName(poster.name);
@@ -159,10 +131,10 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
     await uploadFile(posterBuffer, posterFileName, poster.type);
   }
 
-  let coverFileName = "";
+  let coverFileName = '';
 
-  if (cover.name != undefined) {
-    if (blog.cover) await deleteFile(blog.cover.name);
+  if(cover.name != undefined) {
+    if(blog.cover) await deleteFile(blog.cover.name);
 
     const fileBuffer = await cover.arrayBuffer();
     coverFileName = generateFileName(cover.name);
@@ -171,25 +143,27 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       sharp(fileBuffer)
         .resize({
           width: 800,
-          fit: sharp.fit.cover,
+          fit: sharp.fit.cover
         })
         .toBuffer(async (err, buffer, info) => {
-          if (buffer) {
+          if(buffer) {
             await uploadFile(buffer, coverFileName, cover.type);
             resolve(true);
-          } else {
+          }
+
+          else {
             return Error("Error while uploading image.");
           }
-        });
-    });
+        })
+    })
   }
 
   try {
     await prisma.blog.update({
       where: {
-        blogId: blogId,
+        blogId: blogId
       },
-
+  
       data: {
         blogId: id,
         title,
@@ -202,19 +176,16 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
         categoryName,
         poster: {
           name: posterFileName,
-          url: await getObjectSignedUrl(posterFileName),
+          url: await getObjectSignedUrl(posterFileName)
         },
-        cover:
-          coverFileName != ""
-            ? {
-                name: coverFileName,
-                url: await getObjectSignedUrl(coverFileName),
-              }
-            : blog.cover,
-      },
+        cover: coverFileName != '' ? {
+          name: coverFileName,
+          url: await getObjectSignedUrl(coverFileName)
+        } : blog.cover
+      }
     });
 
-    return NextResponse.json({ message: "Subject updated successfully" });
+    return NextResponse.json({ message: 'Subject updated successfully' });
   } catch (error) {
     return NextResponse.error();
   }

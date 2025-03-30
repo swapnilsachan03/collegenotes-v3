@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React from "react";
+import React from 'react';
 
 interface InputProps {
   placeholder: string;
@@ -17,7 +17,7 @@ const Input: React.FC<InputProps> = ({
   value,
   onChange,
   disabled,
-  required,
+  required
 }) => {
   return (
     <textarea
@@ -25,9 +25,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       required={required}
       disabled={disabled}
-      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-        onChange(e.target.value)
-      }
+      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
       className={`
         relative
         w-full
@@ -44,7 +42,7 @@ const Input: React.FC<InputProps> = ({
         focus:outline-none
       `}
     />
-  );
-};
+  )
+}
 
-export default Input;
+export default Input

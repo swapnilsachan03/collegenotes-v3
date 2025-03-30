@@ -1,5 +1,5 @@
-import React from "react";
-import { IconType } from "react-icons";
+import React from 'react'
+import { IconType } from 'react-icons';
 
 interface ButtonProps {
   color: string;
@@ -12,7 +12,7 @@ const IconButton: React.FC<ButtonProps> = ({
   color,
   icon: Icon,
   loading,
-  onClick,
+  onClick
 }) => {
   return (
     <button
@@ -32,7 +32,7 @@ const IconButton: React.FC<ButtonProps> = ({
     >
       <Icon size={15} />
     </button>
-  );
-};
+  )
+}
 
-export default IconButton;
+export default IconButton

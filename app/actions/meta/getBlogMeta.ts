@@ -1,12 +1,12 @@
 import prisma from "@/app/libs/prismadb";
 import { getObjectSignedUrl } from "@/app/libs/s3";
 
-export default async function getBlogMeta(blogId: string) {
-  if (blogId === "") return null;
+export default async function getBlogMeta (blogId: string) {
+  if(blogId === '') return null;
 
   const blog = await prisma.blog.findUnique({
     where: {
-      blogId,
+      blogId
     },
 
     select: {
@@ -15,8 +15,8 @@ export default async function getBlogMeta(blogId: string) {
       metaDescription: true,
       metaKeywords: true,
       poster: true,
-      authorName: true,
-    },
+      authorName: true
+    }
   });
 
   if (!blog) {

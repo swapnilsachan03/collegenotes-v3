@@ -2,13 +2,8 @@ import { NextResponse } from "next/server";
 import sharp from "sharp";
 import bcrypt from "bcrypt";
 
-import prisma from "@/app/libs/prismadb";
-import {
-  deleteFile,
-  generateFileName,
-  getObjectSignedUrl,
-  uploadFile,
-} from "@/app/libs/s3";
+import prisma from "@/app/libs/prismadb"
+import { deleteFile, generateFileName, getObjectSignedUrl, uploadFile } from "@/app/libs/s3";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -17,24 +12,24 @@ export async function POST(req: Request) {
   const name = formData.get("name")?.toString();
   const password = formData.get("password")?.toString();
 
-  if (!email || !name || !password) {
+  if(!email || !name || !password) {
     return NextResponse.error();
   }
 
   const existingUser = await prisma.user.findUnique({
     where: {
-      email,
-    },
+      email
+    }
   });
 
-  if (existingUser) {
+  if(existingUser) {
     return Error("User already exists.");
   }
 
   const file = formData.get("file") as File;
-  let fileName = "";
+  let fileName = '';
 
-  if (file.name != undefined) {
+  if(file.name != undefined) {
     const fileBuffer = await file.arrayBuffer();
     fileName = generateFileName(file.name);
 
@@ -43,17 +38,19 @@ export async function POST(req: Request) {
         .resize({
           width: 500,
           height: 500,
-          fit: sharp.fit.cover,
+          fit: sharp.fit.cover
         })
         .toBuffer(async (err, buffer, info) => {
-          if (buffer) {
+          if(buffer) {
             await uploadFile(buffer, fileName, file.type);
             resolve(true);
-          } else {
+          }
+
+          else {
             return Error("Error while uploading image.");
           }
-        });
-    });
+        })
+    })
   }
 
   const hashedPassword = await bcrypt.hash(password!, 12);
@@ -64,33 +61,30 @@ export async function POST(req: Request) {
         email,
         name,
         hashedPassword,
-        avatar:
-          fileName != ""
-            ? {
-                name: fileName,
-                url: await getObjectSignedUrl(fileName),
-              }
-            : null,
-      },
+        avatar: fileName != '' ? {
+          name: fileName,
+          url: await getObjectSignedUrl(fileName)
+        } : null
+      }
     });
 
     const stats = await prisma.stats.findMany({
-      take: 1,
+      take: 1
     });
 
     await prisma.stats.update({
       where: {
-        id: stats[0].id,
+        id: stats[0].id
       },
 
       data: {
-        users: await prisma.user.count(),
-      },
+        users: await prisma.user.count()
+      }
     });
 
     return NextResponse.json(user);
   } catch (error) {
-    if (fileName != "") await deleteFile(fileName);
+    if(fileName != '') await deleteFile(fileName);
     return NextResponse.error();
   }
 }

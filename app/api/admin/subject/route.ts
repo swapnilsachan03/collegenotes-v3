@@ -3,26 +3,21 @@ import sharp from "sharp";
 
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import {
-  deleteFile,
-  generateFileName,
-  getObjectSignedUrl,
-  uploadFile,
-} from "@/app/libs/s3";
+import { deleteFile, generateFileName, getObjectSignedUrl, uploadFile } from "@/app/libs/s3";
 
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
-  if (!currentUser) {
+  if(!currentUser) {
     return NextResponse.error();
   }
 
-  if (currentUser.role != "admin" && currentUser.role != "moderator") {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator') {
     return NextResponse.error();
   }
 
   const formData = await request.formData();
-
+  
   const subjectId = formData.get("subjectId")?.toString();
   const name = formData.get("name")?.toString();
   const description = formData.get("description")?.toString();
@@ -36,19 +31,7 @@ export async function POST(request: Request) {
   const poster = formData.get("poster") as File;
   const icon = formData.get("icon") as File;
 
-  if (
-    !subjectId ||
-    !name ||
-    !description ||
-    !seoDescription ||
-    !seoKeywords ||
-    !beforeNotesContent ||
-    !afterNotesContent ||
-    !degree ||
-    !year ||
-    !poster ||
-    !icon
-  ) {
+  if(!subjectId || !name || !description || !seoDescription || !seoKeywords || !beforeNotesContent || !afterNotesContent || !degree || !year || !poster || !icon) {
     return Error("Missing fields.");
   }
 
@@ -64,17 +47,19 @@ export async function POST(request: Request) {
       .resize({
         width: 200,
         height: 200,
-        fit: sharp.fit.cover,
+        fit: sharp.fit.cover
       })
       .toBuffer(async (err, buffer, info) => {
-        if (buffer) {
+        if(buffer) {
           await uploadFile(buffer, iconFileName, icon.type);
           resolve(true);
-        } else {
+        }
+
+        else {
           return Error("Error while uploading icon.");
         }
-      });
-  });
+      })
+  })
 
   try {
     const subject = await prisma.subject.create({
@@ -90,34 +75,31 @@ export async function POST(request: Request) {
         year,
         poster: {
           name: posterFileName,
-          url: await getObjectSignedUrl(posterFileName),
+          url: await getObjectSignedUrl(posterFileName)
         },
         icon: {
           name: iconFileName,
-          url: await getObjectSignedUrl(iconFileName),
-        },
-      },
+          url: await getObjectSignedUrl(iconFileName)
+        }
+      }
     });
 
     const stats = await prisma.stats.findMany({
-      take: 1,
+      take: 1
     });
 
     await prisma.stats.update({
       where: {
-        id: stats[0].id,
+        id: stats[0].id
       },
 
       data: {
         subjects: await prisma.subject.count(),
-        updatedAt: new Date(Date.now()),
-      },
+        updatedAt: new Date(Date.now())
+      }
     });
 
-    return NextResponse.json({
-      message: "Subject created successfully.",
-      subject,
-    });
+    return NextResponse.json({ message: "Subject created successfully.", subject });
   } catch (error) {
     await deleteFile(posterFileName);
     await deleteFile(iconFileName);

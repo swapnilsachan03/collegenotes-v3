@@ -15,7 +15,7 @@ export default async function getBlogs() {
   let blogs = await prisma.blog.findMany({
     where: query,
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc'
     },
     select: {
       id: true,
@@ -29,24 +29,22 @@ export default async function getBlogs() {
       poster: true,
       cover: true,
       createdAt: true,
-      views: true,
-    },
+      views: true
+    }
   });
 
-  for (let i = 0; i < blogs.length; i++) {
+  for(let i = 0; i < blogs.length; i++) {
     blogs[i] = {
       ...blogs[i],
       poster: {
         url: await getObjectSignedUrl(blogs[i].poster.name),
-        name: blogs[i].poster.name,
+        name: blogs[i].poster.name
       },
-      cover: blogs[i].cover
-        ? {
-            url: await getObjectSignedUrl(blogs[i].cover!.name),
-            name: blogs[i].cover!.name,
-          }
-        : null,
-    };
+      cover: blogs[i].cover ? {
+        url: await getObjectSignedUrl(blogs[i].cover!.name),
+        name: blogs[i].cover!.name
+      } : null
+    }
   }
 
   return blogs;

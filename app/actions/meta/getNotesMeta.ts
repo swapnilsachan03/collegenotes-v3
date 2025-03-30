@@ -1,11 +1,11 @@
 import prisma from "@/app/libs/prismadb";
 
-export async function getNotesMeta(notesId: string) {
-  if (notesId === "") return null;
+export async function getNotesMeta (notesId: string) {
+  if(notesId === '') return null;
 
   const notes = await prisma.notes.findUnique({
     where: {
-      notesId,
+      notesId
     },
 
     select: {
@@ -14,8 +14,8 @@ export async function getNotesMeta(notesId: string) {
       description: true,
       subject: true,
       contributor: true,
-      contributorSocial: true,
-    },
+      contributorSocial: true
+    }
   });
 
   if (!notes) {

@@ -13,19 +13,19 @@ export const authOptions: AuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientSecret: process.env.GITHUB_SECRET as string
     }),
 
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
     }),
 
     CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "email", type: "text" },
-        password: { label: "password", type: "password" },
+        password: { label: "password", type: "password" }
       },
 
       async authorize(credentials) {
@@ -35,8 +35,8 @@ export const authOptions: AuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email,
-          },
+            email: credentials.email
+          }
         });
 
         if (!user || !user?.hashedPassword) {
@@ -53,8 +53,8 @@ export const authOptions: AuthOptions = {
         }
 
         return user;
-      },
-    }),
+      }
+    })
   ],
 
   callbacks: {
