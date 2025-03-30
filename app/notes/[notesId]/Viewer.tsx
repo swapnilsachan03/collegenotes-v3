@@ -1,6 +1,7 @@
 'use client';
 
-import PdfViewer from "./PdfViewer";
+import WebViewer from '@pdftron/webviewer';
+import { useEffect, useRef } from 'react';
 
 import { Notes } from '@prisma/client';
 
@@ -9,6 +10,25 @@ interface ViewerProps {
 }
 
 const Viewer: React.FC<ViewerProps> = ({ notes }) => {
+  const viewer = useRef(null);
+
+  useEffect(() => {
+    import('@pdftron/webviewer').then(() => {
+      WebViewer(
+        {
+          path: '/lib',
+          initialDoc: notes.document.url,
+        },
+        viewer.current!,
+      ).then((instance: any) => {
+          const { docViewer } = instance;
+          // you can now call WebViewer APIs here...
+          instance.UI.disableElements(['ribbons']);
+          instance.UI.disableElements(['downloadButton', 'saveAsButton', 'printButton', 'toolsHeader', 'selectButton', 'settingsButton']);
+        });
+    })
+  }, [notes.document.url]);
+
   return (
     <div
       className='
@@ -53,7 +73,7 @@ const Viewer: React.FC<ViewerProps> = ({ notes }) => {
           { notes.description }
         </p>
 
-        <PdfViewer url={notes.document.url} />
+        <div className="h-[98vh]" ref={viewer}></div>
       </div>
     </div>
   )

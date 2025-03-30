@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 
-  if(currentUser.role != 'admin' && currentUser.role != 'editor' && currentUser.role != 'blogger') {
+  if(currentUser.role != 'admin' && currentUser.role != 'moderator' && currentUser.role != 'blogger') {
     return NextResponse.error();
   }
 
